@@ -1,0 +1,687 @@
+\documentclass[a4paper,12pt]{report}
+
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc} % Input encoding for Greek characters
+\usepackage[greek,english]{babel} % Language support
+\usepackage{siunitx}
+\newcommand{\en}{\selectlanguage{english}}
+\newcommand{\gr}{\selectlanguage{greek}}
+% \usepackage{algorithm2e}
+% \usepackage{algorithm}
+% \usepackage{algorithmic}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{graphicx} % For including images
+\usepackage{titlesec} % Custom title formatting
+\usepackage{fancyhdr} % For custom headers and footers
+\usepackage{geometry} % For adjusting page margins
+
+% Adjust the page margins to make content wider
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+% Redefine chapter formatting to make it smaller
+\titleformat{\chapter}[display]
+    {\normalfont\LARGE\bfseries} % Smaller size and bold for chapter heading
+    {\chaptername\ \thechapter} % Chapter number format
+    {15pt} % Space between chapter number and title
+    {\bfseries} % Smaller size and bold for chapter title
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{-3cm}
+    % University logo
+    \includegraphics[width=1\textwidth]{auth_logo.png} % Replace with your actual logo file
+
+    % University name in Greek
+    \textbf{\gr ΑΡΙΣΤΟΤΕΛΕΙΟ ΠΑΝΕΠΙΣΤΗΜΙΟ ΘΕΣΣΑΛΟΝΙΚΗΣ}
+    \vspace{2cm}
+
+    % Document title and subtitle in Greek
+    \LARGE\textbf{\gr Ειδικές Κεραίες Αναφορά} \\
+    \Large\normalfont{\gr Εργασία 1} \\
+    \vspace{4cm}
+
+    \gr
+    \large
+    \textbf{Διακολουκάς Δημήτριος} \\
+    \textbf{AEM 10642}
+    \vspace{2.5cm}
+
+    \en
+    \textit{Email: ddiakolou@ece.auth.gr}
+\end{titlepage}
+
+\gr
+\tableofcontents
+
+\chapter{Εισαγωγή στο \en Paper \gr και στο ζητούμενο}
+Η παρούσα εργασία βασίζεται στο επιστημονικό \en paper \gr με τίτλο:
+
+\begin{quote}
+\en \textbf{“Metamaterial-Based Electrically Small Multiband Planar Monopole Antennas”},\\
+\textit{IEEE Antennas and Wireless Propagation Letters}, Vol. 10, 2011. 
+\gr
+\end{quote}
+
+\hspace{-0.6cm}Το \en paper \gr πραγματεύεται το σχεδιασμό και την ανάλυση ηλεκτρικά μικρών και πολυζωνικών επίπεδων μονοπολικών κεραιών \en (planar monopole antennas) \gr με χρήση δομών μεταϋλικών \en (metamaterials)\gr, συγκεκριμένα δακτυλιοειδών μεταλλικών δομών τύπου \en SRR (Split Ring Resonator)\gr. Οι κεραίες αυτές επιτυγχάνουν πολυζωνική λειτουργία και ενισχυμένη συμπαγή ακτινοβολία, ενώ παραμένουν σε μικρές φυσικές διαστάσεις.
+
+\hspace{-0.6cm}Στόχος του \en paper \gr είναι η διερεύνηση διαφορετικών διαμορφώσεων \en SRR \gr σε επίπεδες μονοπολικές κεραίες και η μελέτη των επιπτώσεών τους στις παραμέτρους ακτινοβολίας, όπως:
+\begin{itemize}
+  \item Ο συντελεστής ανάκλασης \(|S_{11}|\),
+  \item Τα διαγράμματα ακτινοβολίας,
+  \item Η αποδοτικότητα ακτινοβολίας \en (radiation efficiency)\gr,
+  \item Η σύγκριση με το θεωρητικό όριο του \en Chu (Chu limit)\gr.
+\end{itemize}
+
+\hspace{-0.6cm}Στα πλαίσια του μαθήματος, ζητήθηκε να επιλεγεί ένα \en paper \gr από προτεινόμενη λίστα και να αναπαραχθούν τα αποτελέσματά του χρησιμοποιώντας το πακέτο \en \textbf{Antenna Toolbox} \gr της πλατφόρμας \en \textit{MATLAB}\gr. Πιο συγκεκριμένα, για το επιλεγμένο \en paper\gr:
+\begin{enumerate}
+  \item Δημιουργήθηκε μοντέλο της \en SRR\gr-φορτωμένης κεραίας με χρήση \en Boolean \gr γεωμετρικών πράξεων.
+  \item Πραγματοποιήθηκε μελέτη του συντελεστή ανάκλασης \(|S_{11}|\) σε εύρος \en 1–8 GHz\gr.
+  \item Αναλύθηκαν τα διαγράμματα ακτινοβολίας σε τρισδιάστατη και επίπεδη μορφή.
+  \item Υπολογίστηκε η αποδοτικότητα ακτινοβολίας μέσω αριθμητικής ολοκλήρωσης του διαγράμματος κέρδους.
+  \item Υπολογίστηκε το θεωρητικό όριο του \en Chu \gr και η αποτελεσματική ποιότητα \(Q_{\text{\en eff \gr}}\) της κεραίας, συγκρίνοντας την κεραία με και χωρίς μεταϋλικό.
+\end{enumerate}
+
+Μέσω των αποτελεσμάτων επιβεβαιώνεται η ανωτερότητα του σχεδιασμού μεταϋλικών ως προς τη συμπαγή λειτουργία και τις πολυζωνικές επιδόσεις, όπως ακριβώς περιγράφεται στο \en paper\gr. Σε αυτό το σημείο να σημειώσω και ότι για την υλοποίηση βασίστηκα σημαντικά στο βοηθητικό \en .pdf \gr
+αρχείο \en Antenna Matlab Toolbox Tutorial \gr που μας παραχωρήθηκε.
+
+\chapter{Υλοποίηση γεωμετρίας και εξομοίωσης της κεραίας ανά περίπτωση}
+
+Στην ενότητα αυτή περιγράφεται αναλυτικά η υλοποίηση της κεραίας όπως αυτή μελετάται στο άρθρο. Η κατασκευή έγινε μέσω του \en \textbf{Antenna Toolbox} \gr του \en MATLAB\gr, ακολουθώντας με ακρίβεια τις γεωμετρικές διαστάσεις και διαμορφώσεις του σχήματος 3 του άρθρου.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{SANTENNAPIC.png}
+\caption{Σχήμα με φυσικές γεωμετρίες ειδικής κεραίας.}
+\label{fig:srr_geometry}
+\end{figure}
+
+\section{Κατασκευή γεωμετρίας \en SRR \gr}
+
+Η κεραία αποτελείται από μία ευθύγραμμη επίπεδη μονοπολική δομή, η οποία φορτίζεται με διπλή δακτυλιοειδή μεταλλική δομή τύπου \en SRR (\textit{Split Ring Resonator})\gr. Οι διαστάσεις έχουν ληφθεί απευθείας από το άρθρο:
+\begin{itemize}
+  \item Εξωτερικός δακτύλιος: $y = 7.4$\en mm\gr, $z = 7.7$\en mm\gr,
+  \item Πλάτος αγωγού: $c = 0.7$\en mm\gr, διάκενο $g = 0.3$\en mm\gr,
+  \item Ύψος μονοπολικής κεραίας: $l_m = 8.8$\en mm\gr,
+  \item Πλάτος μονοπολικής ταινίας: $w_m = 3$\en mm\gr,
+  \item Πλάτος επιγείων μεταλλικών επιφανειών: $w_g = 26.6$\en mm\gr,
+  \item Διαστάσεις πλακέτας: $26.6 \times 21.8$\en mm\gr.
+\end{itemize}
+
+\hspace{-0.6cm}Η γεωμετρία του διπλού \en SRR \gr αποδίδεται με πράξεις \en Boolean \gr (ένωση και αφαίρεση γεωμετρικών παραλληλογράμμων). Στο Σχήμα~\ref{fig:srr_geometry} φαίνεται το αποτέλεσμα:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{SRR.png}
+\caption{Γεωμετρία κυψελίδας διπλού \en SRR\gr.}
+\label{fig:srr_geometry}
+\end{figure}
+
+\section{Μονοπολική κεραία και επίπεδη πλακέτα}
+
+Η μονοπολική ταινία τοποθετείται κάθετα από την κορυφή των δύο επίγειων επιφανειών \en (pads) \gr και τροφοδοτείται με κάθετο μεταλλικό ακροδέκτη. Στο Σχήμα~\ref{fig:monopole_geometry_2} φαίνεται η πλήρης γεωμετρία της κατασκευής, μαζί με τα pads και την κεραία:
+
+\begin{figure}[H]
+\centering
+
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{MONOGROUND_P1.png}
+\caption{Γεωμετρία μονόπολου και \en Ground Pads \gr με \en SRR \gr (Περίπτωση 1).}
+\label{fig:monopole_geometry_1}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{PLANAR_GEOM_P1.png}
+\caption{Ολοκληρωμένη γεωμετρία κεραίας με \en SRR \gr (Περίπτωση 1).}
+\label{fig:monopole_geometry_2}
+\end{minipage}
+
+\end{figure}
+
+\section{Πλέγμα και εξομοίωση}
+
+Για την ανάγκη ακρίβειας στη χωρική διακριτοποίηση του μοντέλου, εφαρμόστηκε πλέγμα μήκους ακμής $\lambda/10$ εντός του εύρους 1\en GHz \gr έως 8 \en GHz\gr. Το πλέγμα υπολογίζεται αυτόματα από την εντολή \en \verb|mesh(pcb, ...)| \gr με παραμέτρους που ελέγχουν την ανάπτυξη του στοιχείου πλέγματος \en (growth rate)\gr, τη μέγιστη και ελάχιστη ακμή. Παρακάτω παρουσιάζεται το αντίστοιχο πλέγμα για αυτή την περίπτωση.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Mesh_P1.png}
+\caption{\en Mesh \gr Ολόκληρης κεραίας (Περίπτωση 1).}
+\end{figure}
+
+\hspace{-0.6cm}Η τροφοδοσία τοποθετήθηκε στη βάση του μονοπολικού αγωγού, μεταξύ της κορυφής των επιγείων και της κάτω πλευράς του αγωγού. Επομένως, υλοποιήθηκε με τροφοδοσία τύπου μέσω από τη στρώση 3 \en (ground) \gr στη στρώση 1 (αγωγός), σύμφωνα με την απαίτηση του \en Antenna Toolbox\gr.
+
+\section{Παρουσίαση υπολοίπων Περιπτώσεων - μεταβολές Παραμέτρων Γεωμετρίας Κεραιών}
+
+Η βασική περίπτωση υλοποιείται με βάση τη γεωμετρία της μονοπολικής κεραίας μικροταινίας, όπως αυτή παρουσιάζεται στo \en paper \gr που επιλέχθηκε. Οι υπόλοιπες τρεις περιπτώσεις του άρθρου προκύπτουν με στοχευμένες αλλαγές στις διαστάσεις και στη δομή του αγώγιμου τμήματος της κεραίας. Συνοπτικά:
+
+\begin{itemize}
+  \item \textbf{Περίπτωση 1 — \en Microstrip-fed\gr, ευθύγραμμη:}
+  
+  Όπως δίνεται στην αρχική γεωμετρία, οι διαστάσεις είναι:
+  \begin{itemize}
+    \item SRR: $y = 7.4$ \en mm\gr, $z = 7.7$ \en mm\gr
+    \item Μονοπολικό μήκος: $l_m = 8.8$ \en mm\gr
+    \item Μονοπολικό πλάτος: $w_m = 3$ \en mm\gr
+    \item Γείωση: $l_g = 10$ \en mm\gr, $w_g = 26.6$ \en mm\gr
+  \end{itemize}
+
+  \item \textbf{Περίπτωση 2 — \en Coplanar-fed\gr, ευθύγραμμη:}
+  
+  Η τροφοδοσία είναι συν-επίπεδη \en (coplanar)\gr. Εδώ τροποποιούνται οι αποστάσεις \en SRR \gr και το πλάτος του επίπεδου αγώγιμου. Επιπλέον:
+  
+  \begin{itemize}
+    \item $y = 7.6$ \en mm\gr, $z = 7.3$ \en mm \gr
+    \item $w_g = 11.5$ \en mm \gr (πλάτος κάθε \en pad\gr)
+  \end{itemize}
+  
+  \item \textbf{Περίπτωση 3 — \en Microstrip-fed\gr, σχήματος \en L\gr:}
+  
+  Όπως στην Περίπτωση 1, αλλά αλλάζει το ύψος του μονοπολικού σκέλους και προστίθεται οριζόντιο τμήμα. Οι νέες παράμετροι είναι:
+  \begin{itemize}
+    \item $l_m = 11.8$ \en mm \gr (κάθετο σκέλος)
+    \item $k_m = 11.8$ \en mm \gr (οριζόντιο σκέλος)
+  \end{itemize}
+
+
+
+  \item \textbf{Περίπτωση 4 — \en Coplanar-fed\gr, σχήματος \en L\gr:}
+  
+  Συνδυασμός των τροποποιήσεων της Περίπτωσης 2 και 3:
+  \begin{itemize}
+    \item $y = 7.4$ \en mm\gr, $z = 7.4$ \en mm \gr
+    \item $l_m = 11.8$ \en mm\gr, $k_m = 11.8$ \en mm \gr
+    \item $w_g = 11.5$ \en mm \gr
+  \end{itemize}
+\end{itemize}
+
+\hspace{-0.6cm}Τα αντίστοιχα διαγράμματα που προέκυψαν σε κάθε επιμέρους περίπτωση για την γεωμετρία παρουσιάζονται παρακάτω και ακολουθήθηκε παρόμοια διαδικασία με την Περίπτωση 1 ενώ αξίζει να σημειωθεί ότι η γεωμετρία του \en SRR \gr παραμένει ίδια:
+
+\subsection{Περίπτωση 2}
+
+\begin{figure}[H]
+\centering
+
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{MONOGROUND_P2.png}
+\caption{Γεωμετρία μονόπολου και \en Ground Pads \gr με \en SRR \gr (Περίπτωση 2).}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{PLANAR_GEOM_P2.png}
+\caption{Ολοκληρωμένη γεωμετρία κεραίας με \en SRR \gr (Περίπτωση 2).}
+\end{minipage}
+
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Mesh_P2.png}
+\caption{\en Mesh \gr Ολόκληρης κεραίας (Περίπτωση 2).}
+\end{figure}
+
+\subsection{Περίπτωση 3}
+
+\begin{figure}[H]
+\centering
+
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{MONOGROUND_P3.png}
+\caption{Γεωμετρία μονόπολου και \en Ground Pads \gr με \en SRR \gr (Περίπτωση 3).}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{PLANAR_GEOM_P3.png}
+\caption{Ολοκληρωμένη γεωμετρία κεραίας με \en SRR \gr (Περίπτωση 3).}
+\end{minipage}
+
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Mesh_P3.png}
+\caption{\en Mesh \gr Ολόκληρης κεραίας (Περίπτωση 3).}
+\end{figure}
+
+
+\subsection{Περίπτωση 4}
+
+\begin{figure}[H]
+\centering
+
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{MONOGROUND_P4.png}
+\caption{Γεωμετρία μονόπολου και \en Ground Pads \gr με \en SRR \gr (Περίπτωση 4).}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{PLANAR_GEOM_P4.png}
+\caption{Ολοκληρωμένη γεωμετρία κεραίας με \en SRR \gr (Περίπτωση 4).}
+\end{minipage}
+
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Mesh_P4.png}
+\caption{\en Mesh \gr Ολόκληρης κεραίας (Περίπτωση 4).}
+\end{figure}
+
+\vspace{0.4cm}
+
+
+Κάθε περίπτωση οδηγεί σε διαφορετική συχνοτική συμπεριφορά, όπως αυτή επιβεβαιώνεται από τη γραφική παράσταση του συντελεστή ανάκλασης \(|S_{11}|\) όπως θα δούμε και παρακάτω άλλωστε, και επηρεάζει κρίσιμα τη χωρική κατανομή της ακτινοβολίας και την απόδοση της κεραίας.
+Σε αυτό το σημείο αξίζει να σημειωθεί ότι οι γεωμετρίες που προέκυψαν είναι ταυτόσημες με εκείνες που χρησιμοποιήθηκαν στο \en paper \gr και ότι οι αντίστοιχοι κώδικες για κάθε περίπρωση βρίσκονται στα αρχεία \en MATLAB Part1.m, Part2.m, Part3.m \gr και \en Part4.m \gr αντίστοιχα. 
+
+\chapter{Ανάλυση Αποτελεσμάτων Σχολιασμός και Υπολογισμός Μεγεθών Απόδοσης}
+
+\section{Εισαγωγή}
+
+Σε αυτή την ενότητα παρουσιάζονται τα αποτελέσματα της εξομοίωσης για κάθε γεωμετρία που σχεδιάστηκε. Για κάθε μία από τις τέσσερις περιπτώσεις, εξάγονται κρίσιμα μεγέθη απόδοσης της κεραίας, όπως:
+
+\begin{itemize}
+  \item Το εύρος ζώνης $-10$\,\en dB \gr (\en Bandwidth\gr),
+  \item Η αποδοτικότητα ακτινοβολίας (\en Radiation Efficiency\gr),
+  \item Η ποιότητα $Q$ και το \en Chu Limit\gr,
+  \item Το \textit{\en Effective Q \gr} ως μέτρο συμπαγούς σχεδίασης.
+\end{itemize}
+
+\section{Αποτελέσματα Οπτικοποίησης}
+
+Η εξαγωγή των γραφημάτων και η οπτική απεικόνιση των χαρακτηριστικών των κεραιών αποτελεί κρίσιμο βήμα αξιολόγησης της συμπεριφοράς τους. Παρακάτω παρουσιάζονται και αναλύονται οι βασικές μορφές οπτικοποίησης που προέκυψαν από την εξομοίωση:
+
+\subsection{Συντελεστής Ανάκλασης $|S_{11}|$}
+
+Ο συντελεστής ανάκλασης $|S_{11}|$ εξάγεται από το αντικείμενο \verb|sparameters| του \en MATLAB \gr ως:
+
+\en 
+\begin{verbatim}
+freq = linspace(1e9,8e9,300);
+S = sparameters(pcb, freq, 50);
+S11_dB = 20*log10(abs(squeeze(S.Parameters(1,1,:))));
+\end{verbatim}
+\gr
+
+\hspace{-0.6cm}Αναπαρίσταται γραφικά σε σχέση με τη συχνότητα, παρέχοντας πληροφορία για το συντονισμό της κεραίας και τη συχνοτική περιοχή στην οποία επιτυγχάνεται καλή προσαρμογή (δηλαδή $|S_{11}| < -10\,\text{\en dB\gr}$).
+Παρακάτω παρουσιάζονται τα αντίστοιχα διαγράμματα για κάθε μία από τις περιπτώσεις 1, 2, 3 και 4 όταν η κεραία έχει \en SRR \gr και όταν δεν έχει \en SRR\gr:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Comparison_P1.png}
+\caption{Σύγκριση $|S_{11}|$ για την πρώτη κεραία με και χωρίς \en SRR \gr (Περίπτωση 1).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Comparison_P2.png}
+\caption{Σύγκριση $|S_{11}|$ για την δεύτερη κεραία με και χωρίς \en SRR \gr (Περίπτωση 2).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Comparison_P3.png}
+\caption{Σύγκριση $|S_{11}|$ για την τρίτη κεραία με και χωρίς \en SRR \gr (Περίπτωση 3).}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Comparison_P1.png}
+\caption{Σύγκριση $|S_{11}|$ για την τέταρτη κεραία με και χωρίς \en SRR \gr (Περίπτωση 4).}
+\end{figure}
+
+\subsection{Τρισδιάστατο Διάγραμμα Ακτινοβολίας}
+
+Το \en MATLAB \gr προσφέρει τη δυνατότητα απεικόνισης του διαγράμματος ακτινοβολίας μέσω της εντολής:
+
+\en 
+\begin{verbatim}
+pattern(pcb, 2.45e9);
+\end{verbatim}
+\gr
+
+\hspace{-0.6cm}Αυτό παράγει την τρισδιάστατη κατανομή της ακτινοβολούμενης ισχύος στο χώρο για τη συχνότητα λειτουργίας $f = 2.45\,\text{\en GHz\gr}$.
+Παρακάτω παρουσιάζονται τα αντίστοιχα διαγράμματα για κάθε μία από τις περιπτώσεις 1, 2, 3 και 4 όταν η κεραία έχει \en SRR\gr:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Pattern_P1.png}
+\caption{(Περίπτωση 1) Τρισδιάστατο διάγραμμα ακτινοβολίας στα 2.45\,\en GHz\gr.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Pattern_P2.png}
+\caption{(Περίπτωση 2) Τρισδιάστατο διάγραμμα ακτινοβολίας στα 2.45\,\en GHz\gr.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Pattern_P3.png}
+\caption{(Περίπτωση 3) Τρισδιάστατο διάγραμμα ακτινοβολίας στα 2.45\,\en GHz\gr.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Pattern_P4.png}
+\caption{(Περίπτωση 4) Τρισδιάστατο διάγραμμα ακτινοβολίας στα 2.45\,\en GHz\gr.}
+\end{figure}
+
+\subsection{Τομή Ανύψωσης (\en Elevation Pattern\gr)}
+
+Το διάγραμμα ανύψωσης αποδίδει την εξάρτηση της ακτινοβολίας ως προς τη γωνία $\theta$ στο επίπεδο φ = 0° όπως ακριβώς επιδεικνύεται και στο \en paper \gr, το οποίο αναπαριστά τη \textbf{κάθετη τομή} του διαγράμματος:
+
+\en
+\begin{verbatim}
+patternElevation(pcb, 2.45e9, 0);
+\end{verbatim}
+\gr
+
+\hspace{-0.6cm}Με αυτό τον τρόπο παρατηρείται η ύπαρξη κύριων λοβών και πλευρικών λοβών (\en sidelobes\gr), καθώς και η συμμετρία της ακτινοβολίας. Παρακάτω παρουσιάζονται τα αντίστοιχα διαγράμματα για κάθε μία από τις περιπτώσεις 1, 2, 3 και 4 όταν η κεραία έχει \en SRR\gr και όταν δεν έχει \en SRR\gr:
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{elevation_SRR_P1.png}
+\caption{Διάγραμμα ανύψωσης (φ = 0°) με \en SRR \gr (Περίπτωση 1).}
+\label{fig:elevation_srr}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{elevation_NO_SRR_P1.png}
+\caption{Διάγραμμα ανύψωσης (φ = 0°) χωρίς \en SRR \gr (Περίπτωση 1).}
+\label{fig:elevation_no_srr}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{elevation_SRR_P2.png}
+\caption{Διάγραμμα ανύψωσης (φ = 0°) με \en SRR \gr (Περίπτωση 2).}
+\label{fig:elevation_srr}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{elevation_NO_SRR_P2.png}
+\caption{Διάγραμμα ανύψωσης (φ = 0°) χωρίς \en SRR \gr (Περίπτωση 2).}
+\label{fig:elevation_no_srr}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{elevation_SRR_P3.png}
+\caption{Διάγραμμα ανύψωσης (φ = 0°) με \en SRR \gr (Περίπτωση 3).}
+\label{fig:elevation_srr}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{elevation_NO_SRR_P3.png}
+\caption{Διάγραμμα ανύψωσης (φ = 0°) χωρίς \en SRR \gr (Περίπτωση 3).}
+\label{fig:elevation_no_srr}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{elevation_SRR_P4.png}
+\caption{Διάγραμμα ανύψωσης (φ = 0°) με \en SRR \gr (Περίπτωση 4).}
+\label{fig:elevation_srr}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{elevation_NO_SRR_P4.png}
+\caption{Διάγραμμα ανύψωσης (φ = 0°) χωρίς \en SRR \gr (Περίπτωση 4).}
+\label{fig:elevation_no_srr}
+\end{minipage}
+\end{figure}
+
+\subsection{Σχολιασμός}
+
+Τα διαγράμματα ακτινοβολίας αποδεικνύουν ότι η εισαγωγή μεταλλικής δακτυλιοειδούς δομής (\en SRR\gr) επηρεάζει σημαντικά τη χωρική κατανομή και τη σύζευξη με τα γειτονικά μεταλλικά στοιχεία. Συγκεκριμένα όσον αφορά την ανάλυση και Συμπεράσματα S-παραμέτρων:
+
+\hspace{-0.6cm}Στα Σχήματα~3.1 έως~3.4 παρουσιάζονται τα αποτελέσματα της εξομοίωσης για τις τέσσερις διαφορετικές γεωμετρίες κεραιών, με και χωρίς την ενσωμάτωση μεταλλικού στοιχείου \en SRR\gr. Οι καμπύλες \(|S_{11}|\) αναδεικνύουν ξεκάθαρα τις επιπτώσεις του \en SRR \gr στη συχνοτική απόκριση.
+
+\begin{itemize}
+  \item \textbf{Περίπτωση 1 – Μικροταινιακή μονοπολική κεραία:} 
+  \begin{itemize}
+    \item Η παρουσία του \en SRR \gr επιφέρει την εμφάνιση δύο έντονων συντονισμών.
+    \item Ο πρώτος συντονισμός γύρω από τα 2.5 \en GHz \gr απουσιάζει πλήρως στην απλή κεραία.
+    \item Το εύρος ζώνης είναι σχετικά περιορισμένο αλλά σαφώς καθορισμένο.
+  \end{itemize}
+  
+  \item \textbf{Περίπτωση 2 – Συν-επίπεδη μονοπολική κεραία:}
+  \begin{itemize}
+    \item Χωρίς το \en SRR\gr, εντοπίζεται μόνο ένας υψηλός και αδύναμος συντονισμός.
+    \item Με την προσθήκη του \en SRR\gr, εμφανίζονται επιπλέον ζώνες λειτουργίας σε χαμηλότερες συχνότητες.
+    \item Παρατηρείται δυνατότητα πολυσυχνοτικής λειτουργίας \en (multiband)\gr.
+  \end{itemize}
+
+    \item \textbf{Περίπτωση 3 – Μικροταινιακή κεραία σχήματος \en L\gr:}
+  \begin{itemize}
+    \item Το οριζόντιο σκέλος αυξάνει τον αριθμό των συντονισμών.
+    \item Η επίδραση του \en SRR \gr είναι ιδιαίτερα εμφανής σε χαμηλότερες συχνότητες.
+    \item Παρατηρείται μεγαλύτερο εύρος ζώνης και περισσότερα σημεία λειτουργίας.
+  \end{itemize}
+  
+  \item \textbf{Περίπτωση 4 – Συν-επίπεδη κεραία σχήματος \en L\gr:}
+  \begin{itemize}
+    \item Η πιο πολύπλοκη γεωμετρία οδηγεί σε πιο πλούσια και εκτεταμένη απόκριση.
+    \item Με το \en SRR \gr παρατηρούνται πολλαπλοί βαθιοί συντονισμοί, ιδίως στην περιοχή 5--6.5 \en GHz \gr .
+    \item Το \en SRR \gr και το σχήμα \en L \gr συνεργάζονται για μέγιστη απόδοση.
+  \end{itemize}
+\end{itemize}
+
+\subsection*{Συνολικά Συμπεράσματα}
+
+\begin{itemize}
+  \item Η προσθήκη \en SRR \gr βελτιώνει σημαντικά την πολυσυχνοτική συμπεριφορά.
+  \item Οι δομές τύπου \en L \gr ενισχύουν την ευρυζωνικότητα και προσφέρουν μεγαλύτερη ευελιξία.
+  \item Οι συντονισμοί που δημιουργούνται είναι σταθεροί και καλά ελεγχόμενοι, επαληθεύοντας το σχεδιαστικό μοντέλο του άρθρου παρόλο που υπάρχουν αποκλίσεις στα \en plots \gr από αυτά που παρουσιάστηκαν στο \en paper \gr.
+  \item \textbf{Επηρεασμός κατανομής πεδίου:}
+   Η εισαγωγή της μεταλλικής δακτυλιοειδούς δομής \en (SRR) \gr μεταβάλλει την κατανομή του ηλεκτρομαγνητικού πεδίου στο χώρο, οδηγώντας σε ανακατανομή της ενέργειας σε διαφορετικές γωνίες ακτινοβολίας.
+\end{itemize}
+
+\section{Μαθηματικό Υπόβαθρο}
+
+\subsection*{Αποδοτικότητα Ακτινοβολίας}
+Η αποδοτικότητα ακτινοβολίας προσεγγίστηκε μέσω του λόγου μέγιστου κέρδους προς μέγιστη κατευθυντικότητα:
+
+\[
+\eta = \frac{G_{\text{\en max\gr}}}{D_{\text{\en max\gr}}} \quad \text{με } G, D \text{ σε γραμμική μορφή}
+\]
+
+\hspace{-0.6cm}Οι τιμές \en dBi \gr μετατράπηκαν σε γραμμική μορφή:
+
+\[
+G_{\text{\en lin\gr}} = 10^{G/10}, \quad D_{\text{\en lin\gr}} = 10^{D/10}
+\quad\Rightarrow\quad \eta = \frac{G_{\text{\en lin\gr}}}{D_{\text{\en lin\gr}}}
+\]
+
+\subsection*{Εύρος Ζώνης (-10 \en dB\gr)}
+
+Το εύρος ζώνης προκύπτει ως διαφορά μεταξύ των ακραίων συχνοτήτων όπου ο συντελεστής ανάκλασης ικανοποιεί:
+
+\[
+|S_{11}| \leq -10\,\text{\en dB\gr}
+\quad\Rightarrow\quad
+\text{\en BW\gr} = f_{\text{\en end\gr}} - f_{\text{\en start\gr}}
+\]
+
+\subsection*{\en Chu Limit \gr και \en Q\gr}
+
+Για την ανάλυση συμπαγούς σχεδίασης εφαρμόστηκε η θεωρία \en Chu\gr:
+
+\[
+ka = \frac{2\pi a}{\lambda}, \quad Q_{\text{\en Chu\gr}} = \frac{1}{ka^3} + \frac{1}{ka}
+\]
+
+\hspace{-0.6cm}Όπου $a$ η ακτίνα νοητής σφαίρας:
+
+\[
+a = \sqrt{\left(\frac{W}{2}\right)^2 + l_m^2}
+\]
+
+\hspace{-0.6cm}Και:
+\[
+\lambda = \frac{c}{f}
+\]
+
+\hspace{-0.6cm}Η πραγματική ποιότητα κεραίας ορίζεται ως:
+
+\[
+Q = \frac{f_0}{\text{\en BW\gr}}, \quad Q_{\text{\en eff\gr}} = \frac{Q}{\eta}
+\]
+
+\section{Αποτελέσματα ανά Περίπτωση}
+
+\subsection{Περίπτωση 1 — \en Microstrip-fed\gr, Ευθύγραμμη}
+
+
+\begin{itemize}
+    \item \textbf{Με \en SRR\gr (Μεταλλικό Στοιχείο Αντίστασης):}
+    \begin{itemize}
+        \item Εύρος Ζώνης -10 \en dB\gr: 7.09 – 7.44 \en GHz \gr (\(351.2 \, \text{\en MHz\gr}\))
+        \item Εκτιμώμενη Αποδοτικότητα: 19.19\%
+        \item Αποτελεσματική Ποιότητα \(Q_{\text{\en eff\gr}}\): 36.35
+    \end{itemize}
+    \item \textbf{Χωρίς \en SRR\gr:}
+    \begin{itemize}
+        \item Εύρος Ζώνης -10 \en dB\gr: 3.72 – 7.98 \en GHz \gr (\(4260.9 \, \text{\en MHz\gr}\))
+        \item Εκτιμώμενη Αποδοτικότητα: 24.02\%
+        \item Αποτελεσματική Ποιότητα \(Q_{\text{\en eff\gr}}\): 2.39
+    \end{itemize}
+    \item \textbf{Ανάλυση Συμπαγούς Σχεδίασης \en (Chu Limit)\gr:}
+    \begin{itemize}
+        \item \(ka = 1.1817\)
+        \item Χαμηλό Όριο \en Chu \gr για το \(Q\): 1.45
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Περίπτωση 2 — \en Coplanar-fed\gr, Eυθύγραμμο}
+
+\begin{itemize}
+    \item \textbf{Με \en SRR \gr (Μεταλλικό Στοιχείο Αντίστασης):}
+    \begin{itemize}
+        \item Εύρος Ζώνης -10 \en dB\gr: 3.43 – 7.44 \en GHz \gr (\(4003.3 \, \text{\en MHz\gr}\))
+        \item Εκτιμώμενη Αποδοτικότητα: 6.91\%
+        \item Αποτελεσματική Ποιότητα \(Q_{\text{\en eff\gr}}\): 8.86
+    \end{itemize}
+    \item \textbf{Χωρίς \en SRR\gr:}
+    \begin{itemize}
+        \item Εύρος Ζώνης -10 \en dB\gr: 6.43 – 6.53 \en GHz \gr (\(93.6 \, \text{\en MHz\gr}\))
+        \item Εκτιμώμενη Αποδοτικότητα: 7.31\%
+        \item Αποτελεσματική Ποιότητα \(Q_{\text{\en eff\gr}}\): 358.09
+    \end{itemize}
+    \item \textbf{Ανάλυση Συμπαγούς Σχεδίασης \en (Chu Limit)\gr:}
+    \begin{itemize}
+        \item \(ka = 1.1817\)
+        \item Χαμηλό Όριο \en Chu \gr για το \(Q\): 1.45
+    \end{itemize}
+\end{itemize}
+
+\subsection{Περίπτωση 3 — \en Microstrip-fed\gr, Σχήματος \en L\gr}
+
+\begin{itemize}
+    \item \textbf{Με \en SRR \gr (Μεταλλικό Στοιχείο Αντίστασης):}
+    \begin{itemize}
+        \item Εύρος Ζώνης -10 \en dB\gr: 2.01 – 7.20 \en GHz \gr (\(5197.3 \, \text{\en MHz\gr}\))
+        \item Εκτιμώμενη Αποδοτικότητα: 12.97\%
+        \item Αποτελεσματική Ποιότητα \(Q_{\text{\en eff\gr}}\): 3.63
+    \end{itemize}
+    \item \textbf{Χωρίς \en SRR\gr:}
+    \begin{itemize}
+        \item Εύρος Ζώνης -10 \en dB\gr: 7.44 – 7.91 \en GHz \gr (\(468.2 \, \text{\en MHz\gr}\))
+        \item Εκτιμώμενη Αποδοτικότητα: 14.54\%
+        \item Αποτελεσματική Ποιότητα \(Q_{\text{\en eff\gr}}\): 35.98
+    \end{itemize}
+    \item \textbf{Ανάλυση Συμπαγούς Σχεδίασης \en (Chu Limit)\gr:}
+    \begin{itemize}
+        \item \(ka = 1.3104\)
+        \item Χαμηλό Όριο \en Chu \gr για το \(Q\): 1.21
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Περίπτωση 4 — \en Coplanar-fed\gr, Σχήματος \en L\gr}
+
+\begin{itemize}
+    \item \textbf{Με \en SRR \gr (Μεταλλικό Στοιχείο Αντίστασης):}
+    \begin{itemize}
+        \item Εύρος Ζώνης -10 \en dB\gr: 3.48 – 7.51 \en GHz \gr (\(4026.8 \, \text{\en MHz\gr}\))
+        \item Εκτιμώμενη Αποδοτικότητα: 4.87\%
+        \item Αποτελεσματική Ποιότητα \(Q_{\text{\en eff\gr}}\): 12.49
+    \end{itemize}
+    \item \textbf{Χωρίς \en SRR\gr:}
+    \begin{itemize}
+        \item Εύρος Ζώνης -10 \en dB\gr: 6.34 – 6.57 \en GHz \gr (\(234.1 \, \text{\en MHz\gr}\))
+        \item Εκτιμώμενη Αποδοτικότητα: 6.41\%
+        \item Αποτελεσματική Ποιότητα \(Q_{\text{\en eff\gr}}\): 163.24
+    \end{itemize}
+    \item \textbf{Ανάλυση Συμπαγούς Σχεδίασης \en (Chu Limit)\gr:}
+    \begin{itemize}
+        \item \(ka = 1.3104\)
+        \item Χαμηλό Όριο \en Chu \gr για το \(Q\): 1.21
+    \end{itemize}
+\end{itemize}
+
+
+\section{Σύνοψη Αποτελεσμάτων και Απόδοσης}
+Τα αποτελέσματα που προέκυψαν από την μελέτη μου όπως παρατηρούμε δεν συμπίπτουν δυστυχώς τόσο με αυτά του \en Paper \gr για το εύρος ζώνης την αποδοτικότητα και το όριο \en Chu\gr παρόλο που η γεωμετρία είναι σωστή. Η παρατήρηση αυτή γίνεται διότι:
+\begin{itemize}
+  \item \textbf{Χαμηλή αποδοτικότητα}  
+        \begin{itemize}
+            \item \en FR\textsubscript{4} \gr (\en tan\gr$\delta\!\approx\!0.02$) και λεπτά ίχνη ⇒ απώλειες 10–25\%.
+        \end{itemize}
+
+  \item \textbf{Μεγάλο $Q_{\mathrm{eff}}$ σε σχέση με \en  Chu\gr}  
+        \begin{itemize}
+            \item Τα περισσότερα δείγματα απέχουν \en >\!10× \gr από το θεωρητικό κατώφλι.
+            \item Ελλιπής γέμιση του διαθέσιμου όγκου ακτινοβολίας.
+        \end{itemize}
+
+  \item \textbf{Ασυνεπής επίδραση \en SRR \gr στο εύρος ζώνης}  
+        \begin{itemize}
+            \item Σε ορισμένες γεωμετρίες το \en BW \gr στενεύει αντί να αυξάνεται.
+            \item \en |S\textsubscript{11}| \gr μόλις περνά τα \en \(-10\)dB \gr ⇒ οριακό ταίριασμα.
+        \end{itemize}
+  \item \textbf{Πιθανή ιδέα για βελτίωση}  
+        \begin{itemize}
+            \item Να ρυθμίσουμε περισσοτερα τις μεταβλητές \en S, FeedDiameter, FeedLocations, freq \gr στον κώδικα
+            \item Πιθανά λάθη στην λογική υπολογισμών εύρους ζώνης και αποδοτικότητας.
+        \end{itemize}
+\end{itemize}
+
+
+
+
+\bibliographystyle{plain}
+\begin{thebibliography}{1}
+    \bibitem{paper}
+    \en  Metamaterial-Based Electrically Small Multiband
+ Planar Monopole Antennas
+    \bibitem{help}
+    \en Antenna Matlab Toolbox Tutorial
+\end{thebibliography}
+
+\end{document}
