@@ -26,7 +26,7 @@ origBrownColor=[114/256 70/256 43/256];
  
 %% Question B - Analysis of linear arrays with 5 and 9 elements at two phase shift values -->%% Animate   
 array_sizes = [5, 9];      % number of elements in each scenario
-deltaAll   = [0, pi/3];    % 0° and 60° steering
+deltaAll   = [0, pi/3, pi/2, 2*pi/3];    % 0°, 60°, 90° and 120° steering
 d          = lambda/2;     % spacing = λ/2
 
 for n = 1:length(array_sizes)
@@ -61,11 +61,13 @@ for n = 1:length(array_sizes)
         % 1) Array factor (polar)
         subplot(1,2,1); set(gca,'FontSize',Fs);
         A  = ones(1,az);
-        Fa = zeros(1,length(theta));
-        for i = 0:az-1
-          Fa = Fa + A(i+1)*exp(-1i*i*delta + 1i*k*(i*d-mid*d)*cos(theta));
+        Fa=zeros(1,length(theta));
+        for i=0:(length(A)-1)
+            temp = (A(i+1) * exp(-1i*i*delta + 1i*k*(i*d-((length(A)-1)/2)*d)*cos(theta)));
+            Fa = Fa + temp;
         end
-        polar(theta, -abs(Fa)/max(abs(Fa))); axis off;
+        Fa=abs(Fa);
+        polar(theta, -Fa/max(Fa)); axis off;
 
         % 2) Spatial field distribution
         subplot(1,2,2);
