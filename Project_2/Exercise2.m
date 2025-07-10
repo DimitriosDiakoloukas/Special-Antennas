@@ -31,19 +31,17 @@ for idx = 1:length(steer_angles)
     fprintf('\n');
     
     % Compute AF(theta)
-    AF = zeros(size(theta));
-    for m = 1:N
-        AF = AF + exp(1j*( phi_n(m) + ...
-            k*( (m-1)*d - ((N-1)/2)*d )*cos(theta) ));
-    end
-    AF_mag = abs(AF);
-    AF_mag = AF_mag / max(AF_mag);  % normalize
-    
+    % vector version: n = 0:N-1
+    % an = 1
+    AF = exp(1j*( (0:N-1)'*k*d * (sin(theta) - sin(theta0)) ) );
+    AF = sum(AF,1);
+    AF_mag = abs(AF)/N;
+   
     % Polar plot of the normalized AF
     subplot(1,3,idx);
     polarplot(theta, AF_mag, 'LineWidth',1.8);
     title(sprintf('Steering %d°', steer_angles(idx)));
-    thetalim([0 180]);
+    thetalim([0 360]);
     rlim([0 1]);
     grid on;
 end
