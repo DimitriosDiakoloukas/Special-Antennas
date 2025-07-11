@@ -41,6 +41,10 @@ deltas = [0, pi/3, pi/2, 2*pi/3];  % in radians
 
 % Single time snapshot
 it = 1;                 % t = 0
+output_folder = 'C_viz';
+if ~exist(output_folder, 'dir')
+    mkdir(output_folder);
+end
 
 %% Loop over deltas
 for n = 1:length(deltas)
@@ -68,7 +72,7 @@ for n = 1:length(deltas)
     Fa = abs(Fa) / max(abs(Fa));
 
     %% Plotting for this delta
-    figure('Color','w','Position',[100 100 900 400]);
+    gcf = figure('Color','w','Position',[100 100 900 400]);
     Fs = 12;
 
     % Array Factor
@@ -82,4 +86,8 @@ for n = 1:length(deltas)
     shading interp; axis equal off;
     title(sprintf('Near-Field E, δ=%.0f°', delta*180/pi), 'FontSize', Fs);
     xlabel(sprintf('%d elems, d=λ/2', az), 'FontSize', Fs);
+    filename = sprintf('binomial_pattern_%delems_delta_%d_deg.png', az, round(delta*180/pi));
+    fullpath = fullfile(output_folder, filename);
+    saveas(gcf, fullpath);
 end
+

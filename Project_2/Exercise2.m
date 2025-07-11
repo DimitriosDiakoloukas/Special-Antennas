@@ -14,7 +14,11 @@ steer_angles = [30, 60, 90];
 theta = linspace(0,2*pi,720);  % 0–360° in 0.5° steps
 
 %% Phase calculation and array factor (AF)
-figure('Color','w','Position',[100 100 900 300]);
+cgf = figure('Color','w','Position',[100 100 900 300]);
+output_folder = 'A_optical_viz';
+if ~exist(output_folder, 'dir')
+    mkdir(output_folder);
+end
 for idx = 1:length(steer_angles)
     theta0 = steer_angles(idx) * pi/180;  % convert to radians
     
@@ -44,6 +48,9 @@ for idx = 1:length(steer_angles)
     thetalim([0 360]);
     rlim([0 1]);
     grid on;
+    filename = sprintf('AF_optical_steering_%d_deg.png', steer_angles(idx));
+    fullpath = fullfile(output_folder, filename);
+    saveas(gcf, fullpath);
 end
 
 

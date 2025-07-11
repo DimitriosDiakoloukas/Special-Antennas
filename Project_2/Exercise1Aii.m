@@ -28,6 +28,12 @@ y=R.'*sin(theta);
 %% Output properties
 teal = [ 0 0.5 0.5]; % maps for unconventional coloring
 origBrownColor=[114/256 70/256 43/256];
+
+output_folder = 'A2_viz';
+if ~exist(output_folder, 'dir')
+    mkdir(output_folder);
+end
+
 %% Animate
 for ps=1:length(deltaAll) % Sweep through angles
 
@@ -129,7 +135,9 @@ for ps=1:length(deltaAll) % Sweep through angles
      text(-d/max(max(x))+xloc,yloc-yoffset,1,'.','FontSize',Fs+12)
      text(-2*d/max(max(x))+xloc,yloc-yoffset,1,'.','FontSize',Fs+12)
      text(-3*d/max(max(x))+xloc,yloc-yoffset,1,'.','FontSize',Fs+12)
-
+     filename = sprintf('pattern_delta_Aii_%d_deg.png', round(delta*180/pi));
+     fullpath = fullfile(output_folder, filename);
+     saveas(f1, fullpath);
  end
 
 end

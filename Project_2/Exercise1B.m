@@ -29,6 +29,11 @@ array_sizes = [5, 9];      % number of elements in each scenario
 deltaAll   = [0, pi/3, pi/2, 2*pi/3];    % 0°, 60°, 90° and 120° steering
 d          = lambda/2;     % spacing = λ/2
 
+output_folder = 'B_viz';
+if ~exist(output_folder, 'dir')
+    mkdir(output_folder);
+end
+
 for n = 1:length(array_sizes)
     az  = array_sizes(n);       % 5 or 9
     mid = (az-1)/2;             % center‐index for symmetric layout
@@ -56,7 +61,7 @@ for n = 1:length(array_sizes)
         end
 
         % === plot ===
-        figure; set(gcf,'Color',[1 1 1]); Fs=10;
+        f1 = figure; set(gcf,'Color',[1 1 1]); Fs=10;
 
         % 1) Array factor (polar)
         subplot(1,2,1); set(gca,'FontSize',Fs);
@@ -79,5 +84,8 @@ for n = 1:length(array_sizes)
                'FontSize',Fs+2);
         title(sprintf('\\delta = %d°', round(delta*180/pi)),...
               'FontSize',Fs+2,'Color',teal);
+        filename = sprintf('beta_pattern_%delems_delta_%d_deg.png', az, round(delta*180/pi));
+        fullpath = fullfile(output_folder, filename);
+        saveas(f1, fullpath);
     end
 end
